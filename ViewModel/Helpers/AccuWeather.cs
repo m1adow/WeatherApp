@@ -14,7 +14,7 @@ namespace WeatherApp.ViewModel.Helpers
         public const string CURRENTCONDITIONENDPOINT = "currentconditions/v1/{0}?apikey={1}";
         public const string APIKEY = "kK9mUsvk1o3axUnynLoKkBmPNDMqnl1j";
 
-        public async Task<List<City>?> GetCities(string query)
+        public static async Task<List<City>?> GetCities(string query)
         {
             List<City>? cities = new();
 
@@ -31,7 +31,7 @@ namespace WeatherApp.ViewModel.Helpers
             return cities;
         }
 
-        public async Task<CurrentConditions?> GetCurrentConditions(string cityKey)
+        public static async Task<CurrentConditions?> GetCurrentConditions(string cityKey)
         {
             CurrentConditions? currentConditions = new();
 

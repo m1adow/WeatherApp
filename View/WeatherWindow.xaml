@@ -4,15 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherApp.View"
+        xmlns:vm="clr-namespace:WeatherApp.ViewModel"
         mc:Ignorable="d"
-        Title="WeatherWindow" Height="450" Width="800"
-        Background="Black">
-    <Grid Margin="10">
+        Title="WeatherWindow" Height="400" Width="800"
+        Background="Black"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <vm:WeatherViewModel x:Key="vm"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource vm}"
+          Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0"
+              DataContext="{Binding CurrentConditions}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="3*"/>
@@ -27,18 +34,22 @@
             </StackPanel>
             <StackPanel Grid.Column="1"
                         Background="BlueViolet">
-                <TextBlock Text="San Francisco"
-                           Margin="0,32,0,0"
+                <TextBlock DataContext="{StaticResource vm}"
+                           Text="{Binding SelectedCity.LocalizedName}"
+                           Margin="0,19,0,0"
                            Foreground="White"
                            HorizontalAlignment="Center"
                            FontWeight="Bold"/>
-                <TextBlock Text="overcast"
+                <TextBlock Text="{Binding WeatherText}"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Temperature.Metric.Value, StringFormat={}{0}°C}"
                            Foreground="White"
                            HorizontalAlignment="Center"/>
             </StackPanel>
             <StackPanel Grid.Row="1"
                         Grid.ColumnSpan="2"
-                        Background="MidnightBlue">
+                        Background="MediumPurple">
                 <TextBlock Text="Other info:"
                            Margin="10,0,0,0"
                            Foreground="White"
@@ -50,7 +61,7 @@
         <StackPanel Margin="10"
                     Grid.Column="1">
             <TextBlock Text="Search for a city"/>
-            <TextBox/>
+            <TextBox Text="{Binding Query, Mode=TwoWay}"/>
             <Button Content="Search"
 />
             <ListView>

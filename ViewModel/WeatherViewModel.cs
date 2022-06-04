@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using WeatherApp.Model;
+using WeatherApp.ViewModel.Commands;
 using WeatherApp.ViewModel.Helpers;
 
 namespace WeatherApp.ViewModel
@@ -18,6 +20,8 @@ namespace WeatherApp.ViewModel
                 OnPropertyChanged(nameof(Query));
             }
         }
+
+        public ObservableCollection<City>? Cities { get; set; }
 
         private CurrentConditions? _currentConditions;
 
@@ -40,14 +44,17 @@ namespace WeatherApp.ViewModel
             {
                 _selectedCity = value;
                 OnPropertyChanged(nameof(SelectedCity));
+                GetCurrentCondition();
             }
         }
+
+        public SearchCommand? SearchCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public WeatherViewModel()
         {
-            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            /*if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 SelectedCity = new City()
                 {
@@ -65,8 +72,19 @@ namespace WeatherApp.ViewModel
                         }
                     }
                 };
-            }
+            }*/
+
+            SearchCommand = new SearchCommand(this);
+            Cities = new ObservableCollection<City>();
         }     
+
+        private async void GetCurrentCondition()
+        {
+            Query = string.Empty;
+            Cities?.Clear();
+
+            CurrentConditions = await AccuWeather.GetCurrentConditions(SelectedCity.Key);
+        }
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -76,6 +94,11 @@ namespace WeatherApp.ViewModel
         public async void MakeQuery()
         {
             var cities = await AccuWeather.GetCities(Query);
+
+            Cities?.Clear();
+
+            foreach (var city in cities)
+                Cities?.Add(city);
         }
     }
 }

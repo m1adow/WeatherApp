@@ -25,7 +25,7 @@ namespace WeatherApp.ViewModel.Helpers
                 var response = await client.GetAsync(url);
                 string json = await response.Content.ReadAsStringAsync();
 
-                cities = JsonConvert.DeserializeObject<List<City>>(json);
+                cities = JsonConvert.DeserializeObject<List<City>?>(json);
             }
 
             return cities;

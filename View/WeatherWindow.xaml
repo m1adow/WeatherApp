@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherApp.View"
         xmlns:vm="clr-namespace:WeatherApp.ViewModel"
+        xmlns:converters="clr-namespace:WeatherApp.ViewModel.ValueConverters"
         mc:Ignorable="d"
         Title="WeatherWindow" Height="400" Width="800"
         Background="Black"
         ResizeMode="NoResize">
     <Window.Resources>
         <vm:WeatherViewModel x:Key="vm"/>
+        <converters:BoolToRainConverter x:Key="boolToRain"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource vm}"
           Margin="10">
@@ -28,11 +30,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0"
-                        Background="BlueViolet">
-                <Image/>
-            </StackPanel>
-            <StackPanel Grid.Column="1"
+            <StackPanel Grid.ColumnSpan="2"
                         Background="BlueViolet">
                 <TextBlock DataContext="{StaticResource vm}"
                            Text="{Binding SelectedCity.LocalizedName}"
@@ -54,21 +52,25 @@
                            Margin="10,0,0,0"
                            Foreground="White"
                            FontSize="20"/>
-                <TextBlock Foreground="White"
+                <TextBlock Text="{Binding HasPrecipitation, Converter={StaticResource boolToRain}}"
+                           Margin="10,0,0,0"
+                           Foreground="White"
                            FontSize="15"/>
             </StackPanel>
         </Grid>
         <StackPanel Margin="10"
                     Grid.Column="1">
             <TextBlock Text="Search for a city"/>
-            <TextBox Text="{Binding Query, Mode=TwoWay}"/>
+            <TextBox Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Search"
-/>
-            <ListView>
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding Query}"/>
+            <ListView ItemsSource="{Binding Cities}"
+                      SelectedValue="{Binding SelectedCity}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <TextBlock/>
+                            <TextBlock Text="{Binding LocalizedName}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

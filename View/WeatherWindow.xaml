@@ -63,6 +63,7 @@
             <TextBlock Text="Search for a city"/>
             <TextBox Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Search"
+                    Margin="0,5,0,5"
                     Command="{Binding SearchCommand}"
                     CommandParameter="{Binding Query}"/>
             <ListView ItemsSource="{Binding Cities}"
